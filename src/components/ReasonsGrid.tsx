@@ -1,183 +1,180 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Badge } from './ui/badge';
-import { Button } from './ui/button';
-import { Sparkles } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 
-interface ReasonsGridProps {
-  onNext: () => void;
+// --- Data ---
+// The 32 reasons that will be revealed in the boxes.
+const REASONS: string[] = [
+    "Your infectious smile 😊 makes everyone's day.",
+    "You're incredibly kind and thoughtful.",
+    "You have an amazing energy ✨ people enjoy being around.",
+    "You make time for the people you care about.",
+    "You're a brilliant problem-solver.",
+    "Your laugh is truly unforgettable.",
+    "You always show up for your friends.",
+    "You have a great sense of humor.",
+    "You inspire others with your determination.",
+    "Your curiosity for the world is endless.",
+    "You're always willing to learn new things.",
+    "Your unique perspective makes you so valuable.",
+    "You manage to stay positive, even when things are tough.",
+    "Your creativity is a source of amazement.",
+    "You have impeccable taste (in everything!).",
+    "You know how to tell a great story.",
+    "You find the fun in every situation.",
+    "Your ability to forgive is truly admirable.",
+    "You always see the best in people.",
+    "Your genuine compassion for others.",
+    "You set ambitious goals for yourself.",
+    "Your resilience helps you bounce back.",
+    "Your quiet strength speaks volumes.",
+    "You know how to dream big 🌠.",
+    "Your passion is contagious.",
+    "You possess a great sense of style.",
+    "Your thoughtful gestures mean everything.",
+    "You're an exceptional listener.",
+    "Your heart is full of generosity.",
+    "You are authentic and true to yourself.",
+    "You make the world a better place just by being in it.",
+    "You make me look like a genius for finding you! 😉",
+];
+// -----------------
+
+/**
+ * Renders a single reason box.
+ */
+interface ReasonBoxProps {
+    id: number;
+    reason: string;
+    isRevealed: boolean;
+    onToggle: (id: number) => void;
 }
 
-const reasons = [
-  { number: 1, text: "Your infectious smile brightens everyone's day" },
-  { number: 2, text: "You're incredibly kind and thoughtful" },
-  { number: 3, text: "Your strength inspires those around you" },
-  { number: 4, text: "You have an amazing sense of humor" },
-  { number: 5, text: "You're a wonderful friend who's always there" },
-  { number: 6, text: "Your positive energy is contagious" },
-  { number: 7, text: "You make the world a better place" },
-  { number: 8, text: "Your creativity knows no bounds" },
-  { number: 9, text: "You're genuinely caring and compassionate" },
-  { number: 10, text: "Your determination is admirable" },
-  { number: 11, text: "You bring joy wherever you go" },
-  { number: 12, text: "You're authentic and true to yourself" },
-  { number: 13, text: "Your wisdom helps guide others" },
-  { number: 14, text: "You have a beautiful heart" },
-  { number: 15, text: "Your loyalty is unwavering" },
-  { number: 16, text: "You're incredibly talented" },
-  { number: 17, text: "Your generosity touches lives" },
-  { number: 18, text: "You're brave and courageous" },
-  { number: 19, text: "Your optimism lifts spirits" },
-  { number: 20, text: "You're supportive and encouraging" },
-  { number: 21, text: "Your laughter is music to the ears" },
-  { number: 22, text: "You're trustworthy and reliable" },
-  { number: 23, text: "Your presence makes everything better" },
-  { number: 24, text: "You're uniquely wonderful" },
-  { number: 25, text: "Your dreams inspire others to dream too" },
-  { number: 26, text: "You're patient and understanding" },
-  { number: 27, text: "Your intelligence shines through" },
-  { number: 28, text: "You're graceful under pressure" },
-  { number: 29, text: "Your friendship is a precious gift" },
-  { number: 30, text: "You're absolutely irreplaceable" },
-  { number: 31, text: "Your spirit is unbreakable" },
-  { number: 32, text: "You make 32 look absolutely fabulous!" }
-];
+const ReasonBox: React.FC<ReasonBoxProps> = ({ id, reason, isRevealed, onToggle }) => {
+    // Shared classes for layout/sizing
+    const baseClasses = "flex flex-col items-center justify-center h-32 md:h-28 p-3 rounded-xl shadow-lg transition-all duration-300 transform active:scale-95 text-center select-none";
 
-const colors = [
-  'bg-gradient-to-br from-pink-500 to-rose-500',
-  'bg-gradient-to-br from-purple-500 to-pink-500',
-  'bg-gradient-to-br from-blue-500 to-cyan-500',
-  'bg-gradient-to-br from-green-500 to-emerald-500',
-  'bg-gradient-to-br from-yellow-500 to-orange-500',
-  'bg-gradient-to-br from-red-500 to-pink-500',
-];
+    // Dynamic classes based on state
+    const revealedClasses = isRevealed
+        ? "bg-white text-gray-800 border-2 border-gray-300 cursor-default text-base md:text-sm font-medium italic"
+        : "bg-pink-50 text-pink-600 border-2 border-pink-400 cursor-pointer hover:shadow-xl hover:scale-[1.02]";
 
-export function ReasonsGrid({ onNext }: ReasonsGridProps) {
-  const [revealedReasons, setRevealedReasons] = useState<Set<number>>(new Set());
-  const [autoReveal, setAutoReveal] = useState(false);
+    // The content to display
+    const content = isRevealed ? (
+        <span className="reason-text text-sm leading-relaxed">{id + 1}. {reason}</span>
+    ) : (
+        <span className="box-number text-4xl font-bold">{id + 1}</span> // Show box number when hidden
+    );
 
-  useEffect(() => {
-    if (autoReveal) {
-      reasons.forEach((_, index) => {
-        setTimeout(() => {
-          setRevealedReasons(prev => new Set([...prev, index]));
-        }, index * 100);
-      });
-    }
-  }, [autoReveal]);
-
-  const handleReasonClick = (index: number) => {
-    setRevealedReasons(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(index)) {
-        newSet.delete(index);
-      } else {
-        newSet.add(index);
-      }
-      return newSet;
-    });
-  };
-
-  return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center px-4 py-20">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-8"
-      >
-        <h2 className="mb-4 text-gray-900">
-          32 Reasons Why You're Amazing
-        </h2>
-        <p className="text-gray-700 mb-4">Click on each number to reveal why you're special!</p>
-        <Button
-          onClick={() => setAutoReveal(true)}
-          variant="outline"
-          className="border-pink-300 text-pink-600 hover:bg-pink-50"
-        >
-          <Sparkles className="w-4 h-4 mr-2" />
-          Reveal All
-        </Button>
-      </motion.div>
-
-      <div className="grid grid-cols-4 md:grid-cols-8 gap-3 max-w-4xl mx-auto mb-8">
-        {reasons.map((reason, index) => {
-          const isRevealed = revealedReasons.has(index);
-          const colorClass = colors[index % colors.length];
-
-          return (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.02 }}
-            >
-              <motion.div
-                className="relative cursor-pointer h-16 md:h-20"
-                onClick={() => handleReasonClick(index)}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <AnimatePresence mode="wait">
-                  {!isRevealed ? (
-                    <motion.div
-                      key="number"
-                      initial={{ rotateY: 0 }}
-                      exit={{ rotateY: 90, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className={`absolute inset-0 flex items-center justify-center rounded-lg shadow-lg ${colorClass}`}
-                    >
-                      <span className="text-white">{reason.number}</span>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="text"
-                      initial={{ rotateY: -90, opacity: 0 }}
-                      animate={{ rotateY: 0, opacity: 1 }}
-                      transition={{ duration: 0.2 }}
-                      className={`absolute inset-0 flex items-center justify-center text-white text-xs rounded-lg shadow-lg ${colorClass}`}
-                    >
-                      {reason.number}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            </motion.div>
-          );
-        })}
-      </div>
-
-      {/* Display revealed reasons as text */}
-      <div className="max-w-2xl mx-auto space-y-3">
-        <AnimatePresence>
-          {Array.from(revealedReasons)
-            .sort((a, b) => a - b)
-            .map((index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                className="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md"
-              >
-                <span className={`inline-block px-3 py-1 rounded-full text-white text-sm mr-3 ${colors[index % colors.length]}`}>
-                  #{reasons[index].number}
-                </span>
-                <span className="text-gray-700">{reasons[index].text}</span>
-              </motion.div>
-            ))}
-        </AnimatePresence>
-      </div>
-
-      {revealedReasons.size === 32 && (
+    return (
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="mt-8 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: id * 0.05 }}
+            className={`${baseClasses} ${revealedClasses}`}
+            onClick={() => onToggle(id)}
+            aria-label={isRevealed ? `Reason ${id + 1}: ${reason}` : `Click to reveal reason ${id + 1}`}
+            role="button"
+            tabIndex={0}
         >
-          <p className="text-gray-800 mb-2">🎉 You've discovered all 32 reasons! 🎉</p>
-          <p className="text-sm text-gray-700">And there are countless more...</p>
+            {content}
         </motion.div>
-      )}
-    </div>
-  );
-}
+    );
+};
+
+// -----------------
+
+/**
+ * Main application component.
+ */
+export function ReasonsGrid() {
+    // State: A Map to track the reveal status of each reason (key is index 0-31)
+    const [revealedStatus, setRevealedStatus] = useState<Map<number, boolean>>(() => new Map());
+
+    // Toggle the revealed state for a single reason box
+    const toggleReason = (id: number) => {
+        // Prevent toggling if already revealed, only allow hiding via "Hide All"
+        if (revealedStatus.get(id)) return;
+        
+        setRevealedStatus(prevStatus => {
+            const newStatus = new Map(prevStatus);
+            // Toggle the current state, if it exists, otherwise set to true
+            newStatus.set(id, !prevStatus.get(id));
+            return newStatus;
+        });
+    };
+
+    // Determine if all reasons are currently revealed
+    const isAllRevealed = useMemo(() => {
+        return REASONS.every((_, index) => revealedStatus.get(index));
+    }, [revealedStatus]);
+
+    // Handle "Reveal All" or "Hide All" button click
+    const handleRevealAll = () => {
+        if (isAllRevealed) {
+            // If all are revealed, hide all
+            setRevealedStatus(new Map());
+        } else {
+            // If any are hidden, reveal all
+            const allRevealed = new Map();
+            REASONS.forEach((_, index) => allRevealed.set(index, true));
+            setRevealedStatus(allRevealed);
+        }
+    };
+
+    // Use a <style> block for the custom background gradient and font setup
+    const customStyles = `
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .reasons-page-container {
+            /* Mimics the soft, radiant background from the image */
+            background: radial-gradient(circle at top, #fff0f5 0%, #f0f8ff 100%);
+        }
+    `;
+
+    return (
+        <>
+            <style>{customStyles}</style>
+            <div className="reasons-page-container flex flex-col items-center p-5 min-h-screen">
+                <h1 className="text-4xl md:text-3xl font-extrabold text-gray-800 mt-10 mb-2">
+                    32 Reasons Why You're Amazing
+                </h1>
+                <p className="text-lg text-gray-600 mb-8">
+                    Tap on a box to reveal a reason!
+                </p>
+
+                <button
+                    className={`
+                        py-3 px-8 mb-10 rounded-full font-bold shadow-xl transition-all duration-200 transform hover:scale-[1.03]
+                        ${isAllRevealed
+                            ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            : 'bg-pink-500 text-white shadow-pink-500/50 hover:bg-pink-600'
+                        }
+                    `}
+                    onClick={handleRevealAll}
+                >
+                    <span role="img" aria-label="sparkle" className="mr-2">✨</span>
+                    {isAllRevealed ? 'Hide All' : 'Reveal All'}
+                </button>
+                
+                {/* The main responsive grid container */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-w-5xl">
+                    {REASONS.map((reason, index) => (
+                        <ReasonBox
+                            key={index}
+                            id={index}
+                            reason={reason}
+                            isRevealed={!!revealedStatus.get(index)}
+                            onToggle={toggleReason}
+                        />
+                    ))}
+                </div>
+
+                <p className="text-gray-500 mt-12 mb-5 text-sm italic">
+                    {REASONS.length} reasons. And there are so many more.
+                </p>
+            </div>
+        </>
+    );
+};

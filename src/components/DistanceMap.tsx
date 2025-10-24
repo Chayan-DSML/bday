@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { MapPin, Heart, Navigation } from 'lucide-react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
@@ -149,10 +149,10 @@ export function DistanceMap({ onNext }: DistanceMapProps) {
           className="mt-8 text-center p-6 bg-gradient-to-r from-pink-100 via-purple-100 to-blue-100 rounded-lg"
         >
           <p className="text-gray-700 mb-2">
-            Though we're 1,200 kilometers apart, you're always in my thoughts and in my heart.
+           To my favorite women cum friend, Happy Birthday! You mean the world to me.
           </p>
           <p className="text-gray-700">
-            Distance means so little when someone means so much. Happy Birthday, dear friend! 💝
+           I'm sending you all the best wishes and the biggest virtual hug for a truly wonderful celebration. I'm so grateful to have you in my life 💝
           </p>
         </motion.div>
       </Card>

@@ -4,7 +4,7 @@ import { WishesGallery } from './components/WishesGallery';
 import { DistanceMap } from './components/DistanceMap';
 import { ReasonsGrid } from './components/ReasonsGrid';
 import { FinalMessage } from './components/FinalMessage';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { Button } from './components/ui/button';
 

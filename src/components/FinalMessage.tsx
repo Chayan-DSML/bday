@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Heart, Cake, Gift, Sparkles, Star } from 'lucide-react';
 import { Card } from './ui/card';
 import { ImageWithFallback } from './figma/ImageWithFallback';
@@ -84,23 +84,25 @@ export function FinalMessage({ onNext }: FinalMessageProps) {
           <Card className="p-8 bg-white/90 backdrop-blur-sm shadow-2xl mb-8">
             <div className="mb-6 rounded-lg overflow-hidden">
               <ImageWithFallback
-                src="https://images.unsplash.com/photo-1616964524979-c08f6d87c7e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiaXJ0aGRheSUyMGNha2UlMjBjYW5kbGVzfGVufDF8fHx8MTc2MTI1ODk1MXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                src="https://lh3.googleusercontent.com/d/1bNAYTTmoNxtviheM9bEtZRLXT6jgUzF0"
                 alt="Birthday celebration"
-                className="w-full h-64 object-cover"
+                className="w-full h-auto"
               />
             </div>
             
             <div className="space-y-4 text-gray-800">
               <p>
-                As you turn 32 today, I want you to know how incredibly special you are.
-                Despite the 1,200 kilometers between us, our friendship remains one of the
-                most precious things in my life.
+              Thirty-two candles, a brilliant gleam,
+              For Shraddha, whose code is a sweet, strong dream.
+              A backend wizard, with logic so keen,
+              Building the future, a digital scene.
               </p>
               
               <p>
-                You've touched so many lives with your kindness, your strength, and your
-                beautiful soul. This year is going to bring you so much joy, success, and
-                all the happiness you deserve.
+              With Maumati purring, a furry delight,
+              You craft algorithms, morning and night.
+              May your special day be joyful and bright,
+              Filled with laughter, love, and pure light!
               </p>
               
               <p>
